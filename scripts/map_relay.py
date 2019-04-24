@@ -49,7 +49,7 @@ class MapRelay(object):
     self._pose = np.array([np.nan, np.nan, np.nan], dtype=np.float32)
     
   def callback(self, msg):
-    self.update_pose()
+    # self.update_pose()
     self._occupancy_grid = msg
     # if self.master_relay is None:
     #   self._occupancy_grid_pub = msg
@@ -167,7 +167,8 @@ def run(args):
   master_relay_ = MapRelay(None, master_robot_name, map_topic_name, relay_map_topic_suffix, maximum_range)
   map_relays = []
   for name in other_robot_names.split(','):
-    map_relays.append(MapRelay(master_relay_, name, map_topic_name, relay_map_topic_suffix, maximum_range))
+    if len(name) > 0:
+      map_relays.append(MapRelay(master_relay_, name, map_topic_name, relay_map_topic_suffix, maximum_range))
 
   # map_topic= rospy.get_param('~map_topic','/map')
 
