@@ -70,6 +70,7 @@ int main(int argc, char **argv)
   // fetching all parameters
   float eta,init_map_x,init_map_y,range;
   std::string map_topic,base_frame_topic;
+  std::string detected_points_topic;
   
   std::string ns;
   ns=ros::this_node::getName();
@@ -77,12 +78,13 @@ int main(int argc, char **argv)
   ros::param::param<float>(ns+"/eta", eta, 0.5);
   ros::param::param<std::string>(ns+"/map_topic", map_topic, "/robot_1/map"); 
   ros::param::param<std::string>(ns+"/robot_frame", base_frame_topic, "/robot_1/base_link"); 
+  ros::param::param<std::string>(ns+"/detected_points_topic", detected_points_topic, "/detected_points"); 
 //---------------------------------------------------------------
 ros::Subscriber sub= nh.subscribe(map_topic, 100 ,mapCallBack);	
 ros::Subscriber rviz_sub= nh.subscribe("/clicked_point", 100 ,rvizCallBack);	
 
-ros::Publisher targetspub = nh.advertise<geometry_msgs::PointStamped>("/detected_points", 10);
-ros::Publisher pub = nh.advertise<visualization_msgs::Marker>(ns+"_shapes", 10);
+ros::Publisher targetspub = nh.advertise<geometry_msgs::PointStamped>(detected_points_topic, 10);
+ros::Publisher pub = nh.advertise<visualization_msgs::Marker>(ns+"/shapes", 10);
 
 ros::Rate rate(100); 
  

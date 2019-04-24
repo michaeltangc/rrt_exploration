@@ -109,7 +109,7 @@ def node():
 			# print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 			print("Start time", start_time, "Finish time", finish_time)
 			
-			with open('~/ros_log/log.txt', 'a+') as f:
+			with open('/home/michael/ros_log/log.txt', 'a+') as f:
 				f.write("Stamp," + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "Start_time,"+ str(start_time) + ",Finish_time," + str(finish_time) + ",Diff," + str(finish_time - start_time) + '\n')
 			# print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 			finished = True
