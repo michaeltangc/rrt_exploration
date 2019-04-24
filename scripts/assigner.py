@@ -15,7 +15,11 @@ from numpy import all as All
 from numpy import inf
 from functions import robot,informationGain,discount
 from numpy.linalg import norm
+import datetime
 
+start_time = None
+finished = False
+busy_robot_count = 1
 # Subscribers' callbacks------------------------------
 mapData=OccupancyGrid()
 frontiers=[]
@@ -25,6 +29,7 @@ global3=OccupancyGrid()
 globalmaps=[]
 def callBack(data):
 	global frontiers
+	# global start_time, finished, busy_robot_count
 	frontiers=[]
 	for point in data.points:
 		frontiers.append(array([point.x,point.y]))
@@ -35,6 +40,7 @@ def mapCallBack(data):
 # Node----------------------------------------------
 
 def node():
+	global start_time, finished, busy_robot_count
 	global frontiers,mapData,global1,global2,global3,globalmaps
 	rospy.init_node('assigner', anonymous=False)
 	
@@ -77,6 +83,7 @@ def node():
 #-------------------------------------------------------------------------
 #---------------------     Main   Loop     -------------------------------
 #-------------------------------------------------------------------------
+	start_time = rospy.get_time()
 	while not rospy.is_shutdown():
 		centroids=copy(frontiers)		
 #-------------------------------------------------------------------------			
@@ -95,6 +102,17 @@ def node():
 			else:
 				na.append(i)	
 		rospy.loginfo("available robots: "+str(na))	
+		busy_robot_count = len(nb)
+		# print("BBBBBBBBBB ", len(frontiers), busy_robot_count)
+		if not finished and len(frontiers) < 1 and busy_robot_count == 0:
+			finish_time = rospy.get_time()
+			print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+			print("Start time", start_time, "Finish time", finish_time)
+			
+			with open('/home/michael/ros_log/log.txt', 'a+') as f:
+				f.write("Stamp," + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "Start_time,"+ str(start_time) + ",Finish_time," + str(finish_time) + ",Diff," + str(finish_time - start_time) + '\n')
+			print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+			finished = True
 #------------------------------------------------------------------------- 
 #get dicount and update informationGain
 		for i in nb+na:

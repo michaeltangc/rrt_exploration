@@ -183,8 +183,9 @@ def node():
 		if len(front)==1:
 			centroids=front
 		frontiers=copy(centroids)
+		frontiers_temp = copy(frontiers)
 #-------------------------------------------------------------------------	
-#clearing old frontiers  
+#clearing old frontiers
       
 		z=0
 		while z<len(centroids):
@@ -211,9 +212,9 @@ def node():
 			arraypoints.points.append(copy(tempPoint))
 		filterpub.publish(arraypoints)
 		pp=[]	
-		for q in range(0,len(frontiers)):
-			p.x=frontiers[q][0]
-			p.y=frontiers[q][1]
+		for q in range(0,len(frontiers_temp)):
+			p.x=frontiers_temp[q][0]
+			p.y=frontiers_temp[q][1]
 			pp.append(copy(p))
 		points.points=pp
 		pp=[]	
