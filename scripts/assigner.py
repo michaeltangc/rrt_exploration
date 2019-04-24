@@ -50,6 +50,7 @@ def node():
 	namespace_init_count = rospy.get_param('namespace_init_count',1)
 	delay_after_assignement=rospy.get_param('~delay_after_assignement',0.5)
 	rateHz = rospy.get_param('~rate',100)
+	task_reset_time_out_s = rospy.get_param('~task_reset_time_out', 30)
 	
 	rate = rospy.Rate(rateHz)
 #-------------------------------------------
@@ -72,7 +73,7 @@ def node():
 	elif len(namespace)==0:
 			robots.append(robot(namespace))
 	for i in range(0,n_robots):
-		robots[i].sendGoal(robots[i].getPosition())
+		robots[i].sendGoal(robots[i].getPosition(), None)
 #-------------------------------------------------------------------------
 #---------------------     Main   Loop     -------------------------------
 #-------------------------------------------------------------------------
@@ -88,6 +89,7 @@ def node():
 		na=[] #available robots
 		nb=[] #busy robots
 		for i in range(0,n_robots):
+			robots[i].cancelIfOverTime(rospy.get_time(), task_reset_time_out_s)
 			if (robots[i].getState()==1):
 				nb.append(i)
 			else:
@@ -142,7 +144,7 @@ def node():
 #-------------------------------------------------------------------------	
 		if (len(id_record)>0):
 			winner_id=revenue_record.index(max(revenue_record))
-			robots[id_record[winner_id]].sendGoal(centroid_record[winner_id])
+			robots[id_record[winner_id]].sendGoal(centroid_record[winner_id], rospy.get_time())
 			rospy.loginfo(namespace+str(namespace_init_count+id_record[winner_id])+"  assigned to  "+str(centroid_record[winner_id]))	
 			rospy.sleep(delay_after_assignement)
 #------------------------------------------------------------------------- 

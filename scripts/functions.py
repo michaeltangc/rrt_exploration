@@ -17,6 +17,7 @@ class robot:
 	def __init__(self,name):
 		self.assigned_point=[]
 		self.name=name
+		self.assignment_time = None
 		self.global_frame=rospy.get_param('~global_frame','/map')
 		self.listener=tf.TransformListener()
 		self.listener.waitForTransform(self.global_frame, name+'/base_link', rospy.Time(0),rospy.Duration(10.0))
@@ -50,12 +51,21 @@ class robot:
 		self.position=array([trans[0],trans[1]])
 		return self.position
 		
-	def sendGoal(self,point):
+	def sendGoal(self,point,time):
 		robot.goal.target_pose.pose.position.x=point[0]
 		robot.goal.target_pose.pose.position.y=point[1]
 		robot.goal.target_pose.pose.orientation.w = 1.0
 		self.client.send_goal(robot.goal)
 		self.assigned_point=array(point)
+		self.assignment_time = time
+
+	def cancelIfOverTime(self, time, limit):
+		
+		if self.assignment_time is not None:
+			# print(time - self.assignment_time)
+			if time - self.assignment_time > limit:
+				self.cancelGoal()
+				self.assignment_time = None
 	
 	def cancelGoal(self):
 		self.client.cancel_goal()
