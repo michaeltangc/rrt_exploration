@@ -56,7 +56,7 @@ def node():
 	namespace_init_count = rospy.get_param('namespace_init_count',1)
 	delay_after_assignement=rospy.get_param('~delay_after_assignement',0.5)
 	rateHz = rospy.get_param('~rate',100)
-	task_reset_time_out_s = rospy.get_param('~task_reset_time_out', 30)
+	task_reset_time_out_s = rospy.get_param('~task_reset_time_out', 4)
 	
 	rate = rospy.Rate(rateHz)
 #-------------------------------------------
@@ -106,12 +106,12 @@ def node():
 		# print("BBBBBBBBBB ", len(frontiers), busy_robot_count)
 		if not finished and len(frontiers) < 1 and busy_robot_count == 0:
 			finish_time = rospy.get_time()
-			print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+			# print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 			print("Start time", start_time, "Finish time", finish_time)
 			
-			with open('/home/michael/ros_log/log.txt', 'a+') as f:
+			with open('~/ros_log/log.txt', 'a+') as f:
 				f.write("Stamp," + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "Start_time,"+ str(start_time) + ",Finish_time," + str(finish_time) + ",Diff," + str(finish_time - start_time) + '\n')
-			print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+			# print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 			finished = True
 #------------------------------------------------------------------------- 
 #get dicount and update informationGain
