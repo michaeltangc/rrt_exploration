@@ -52,7 +52,7 @@ def node():
 	goals_topic= rospy.get_param('~goals_topic','/detected_points')	
 	n_robots = rospy.get_param('~n_robots',1)
 	namespace = rospy.get_param('~namespace','')
-	namespace_init_count = rospy.get_param('namespace_init_count',1)
+	namespace_init_count = rospy.get_param('~namespace_init_count',1)
 	rateHz = rospy.get_param('~rate',100)
 	litraIndx=len(namespace)
 	rate = rospy.Rate(rateHz)
@@ -77,6 +77,7 @@ def node():
 #wait if any of robots' global costmap map is not received yet
 	for i in range(0,n_robots):
  		 while (len(globalmaps[i].data)<1):
+			# print(namespace+str(i+namespace_init_count)+'/move_base_node/global_costmap/costmap')
  		 	pass
 	
 	global_frame="/"+mapData.header.frame_id
@@ -99,6 +100,7 @@ def node():
 	
 	# wait if no frontier is received yet 
 	while len(frontiers)<1:
+		# print("STUCK AT Frontiers")
 		pass
 	
 	

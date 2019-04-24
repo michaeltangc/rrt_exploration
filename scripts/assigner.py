@@ -27,6 +27,7 @@ global1=OccupancyGrid()
 global2=OccupancyGrid()
 global3=OccupancyGrid()
 globalmaps=[]
+# frontiers_topic = ""
 def callBack(data):
 	global frontiers
 	# global start_time, finished, busy_robot_count
@@ -42,6 +43,7 @@ def mapCallBack(data):
 def node():
 	global start_time, finished, busy_robot_count
 	global frontiers,mapData,global1,global2,global3,globalmaps
+	# global frontiers_topic
 	rospy.init_node('assigner', anonymous=False)
 	
 	# fetching all parameters
@@ -53,7 +55,7 @@ def node():
 	frontiers_topic= rospy.get_param('~frontiers_topic','/filtered_points')	
 	n_robots = rospy.get_param('~n_robots',1)
 	namespace = rospy.get_param('~namespace','')
-	namespace_init_count = rospy.get_param('namespace_init_count',1)
+	namespace_init_count = rospy.get_param('~namespace_init_count',1)
 	delay_after_assignement=rospy.get_param('~delay_after_assignement',0.5)
 	rateHz = rospy.get_param('~rate',100)
 	task_reset_time_out_s = rospy.get_param('~task_reset_time_out', 4)
@@ -110,7 +112,7 @@ def node():
 			print("Start time", start_time, "Finish time", finish_time)
 			
 			with open('/home/michael/ros_log/log.txt', 'a+') as f:
-				f.write("Stamp," + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "Start_time,"+ str(start_time) + ",Finish_time," + str(finish_time) + ",Diff," + str(finish_time - start_time) + '\n')
+				f.write("Topc," + frontiers_topic + ",Stamp," + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "Start_time,"+ str(start_time) + ",Finish_time," + str(finish_time) + ",Diff," + str(finish_time - start_time) + '\n')
 			# print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 			finished = True
 #------------------------------------------------------------------------- 

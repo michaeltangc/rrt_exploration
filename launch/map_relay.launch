@@ -1,0 +1,11 @@
+<launch>
+    <group ns="/robot_2">
+        <node pkg="rrt_exploration" type="map_relay.py" name="robot_1_map_relay" output="screen">
+            <param name="master_robot_name" value="robot_1"/>
+            <param name="other_robot_names" value="robot_2"/>
+            <param name="map_topic_name" value="map"/> 
+            <param name="relay_map_topic_suffix" value="map_relay_robot_1"/> 
+            <param name="maximum_range" value="5.0"/> 
+        </node>
+    </group>
+</launch>
