@@ -46,6 +46,7 @@ def mapCallBack(data):
     global mapData, finished_map, start_date, start_time, map_grid_count, frontiers_topic, simulation_summary_string
     mapData = data
     if map_grid_count > 0 and not start_time is None:
+        t = rospy.get_time()
         try:
             finished_grid_count = np.count_nonzero(np.where(np.array(data.data, dtype=np.int8) == -1, False, True))
             path = "/home/michael/ros_log/" + start_date + "_" + simulation_summary_string + ".txt"
@@ -55,7 +56,6 @@ def mapCallBack(data):
             else:
                 append_write = 'w' # make a new file if not
             with open(path, append_write) as f:
-                t = rospy.get_time()
                 f.write(str(t) + "," + str(t - start_time) + "," + str(finished_grid_count) + '\n')
         except Exception as e:
             print(e)
@@ -130,6 +130,9 @@ def node():
                 na.append(i)	
         rospy.loginfo("available robots: "+str(na))	
         busy_robot_count = len(nb)
+        if len(centroids) == 0:
+            for r in na:
+                robots[i].sendGoal(array([0.0, 0.0]), rospy.get_time())
         # print("BBBBBBBBBB ", len(frontiers), busy_robot_count)
         if not finished and len(frontiers) < 1 and busy_robot_count == 0:
             finish_time = rospy.get_time()
@@ -137,7 +140,7 @@ def node():
             print("Start time", start_time, "Finish time", finish_time)
             try:
                 with open('/home/michael/ros_log/log.txt', 'a+') as f:
-                    f.write(simulation_summary_string + ",Topic," + frontiers_topic + ",Stamp," + start_date + "Start_time,"+ str(start_time) + ",Finish_time," + str(finish_time) + ",Diff," + str(finish_time - start_time) + '\n')
+                    f.write(simulation_summary_string + ",Topic," + frontiers_topic + ",Stamp," + start_date + ",Start_time,"+ str(start_time) + ",Finish_time," + str(finish_time) + ",Diff," + str(finish_time - start_time) + '\n')
                 # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                 finished = True
             except Exception as e:
